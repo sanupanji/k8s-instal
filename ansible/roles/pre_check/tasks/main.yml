@@ -1,3 +1,24 @@
+# - name: open ports for master nodes
+#   shell: |
+#     firewall-cmd --zone=public --permanent --add-port=6443/tcp
+#     firewall-cmd --zone=public --permanent --add-port=2379-2380/tcp
+#     firewall-cmd --zone=public --permanent --add-port=10250/tcp
+#     firewall-cmd --zone=public --permanent --add-port=10257/tcp
+#     firewall-cmd --zone=public --permanent --add-port=10259/tcp
+#     firewall-cmd --reload
+#   when: "'master' in inventory_hostname"
+
+# - name: open ports for worker nodes
+#   shell: |
+#     firewall-cmd --zone=public --permanent --add-port=10250/tcp
+#     firewall-cmd --zone=public --permanent --add-port=30000-32767/tcp
+#     firewall-cmd --reload
+#   when: "'worker' in inventory_hostname"
+  
+- name: swap off
+  shell: |
+    swapoff -a; sed -i '/swap/d' /etc/fstab
+    
 # - name: Enable Kernel modules 
 #   shell: |
 #     cat <<EOF | tee /etc/modules-load.d/containerd.conf
@@ -11,17 +32,17 @@
 #     modprobe br_netfilter 
 
 
-- name: Add Kernel settings 
-  shell: |
-    cat >>/etc/sysctl.conf<<EOF
-    net.bridge.bridge-nf-call-ip6tables = 1
-    net.bridge.bridge-nf-call-iptables  = 1
-    net.ipv4.ip_forward                 = 1
-    EOF
+# - name: Add Kernel settings 
+#   shell: |
+#     cat >>/etc/sysctl.conf<<EOF
+#     net.bridge.bridge-nf-call-ip6tables = 1
+#     net.bridge.bridge-nf-call-iptables  = 1
+#     net.ipv4.ip_forward                 = 1
+#     EOF
 
-- name: Load sysctl
-  shell: |
-    sysctl --system
+# - name: Load sysctl
+#   shell: |
+#     sysctl --system
 
 # - name: install docker and containerd
 #   shell: |

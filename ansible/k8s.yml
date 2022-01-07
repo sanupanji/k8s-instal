@@ -1,9 +1,9 @@
-- name: host setup
-  hosts: all
-  any_errors_fatal: true
-  gather_facts: no
-  roles:
-    - host_setup
+# - name: host setup
+#   hosts: all
+#   any_errors_fatal: true
+#   gather_facts: no
+#   roles:
+#     - host_setup
 
 - name: pre check
   hosts: CLUSTER

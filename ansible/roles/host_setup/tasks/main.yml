@@ -1,8 +1,25 @@
-- name: set hostname
-  shell: |
-    hostnamectl set-hostname {{inventory_hostname}}.{{FQDN}}
+# - name: set hostname
+#   shell: |
+#     hostnamectl set-hostname {{inventory_hostname}}.{{FQDN}}
 
-- name: create config
-  template:
-    src: hosts.j2
-    dest: /etc/hosts
+# - name: create config
+#   template:
+#     src: hosts.j2
+#     dest: /etc/hosts
+
+- name: open ports for master nodes
+  shell: |
+    ufw allow 6443/tcp
+    ufw allow 2379:2380/tcp
+    ufw allow 10250/tcp
+    ufw allow 10257/tcp
+    ufw allow 10259/tcp
+    ufw reload
+  when: "'master' in inventory_hostname"
+
+- name: open ports for worker nodes
+  shell: |
+    ufw allow 10250/tcp
+    ufw allow 30000:32767/tcp
+    ufw reload
+  when: "'worker' in inventory_hostname"

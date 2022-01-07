@@ -1,3 +1,1 @@
-# 21.1_EC
-
-PN 21.1 NSA
+K8s instaltion script

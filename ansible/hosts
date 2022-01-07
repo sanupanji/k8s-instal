@@ -1,20 +1,20 @@
-director_1 ansible_host=10.164.227.143 ansible_user=root ansible_password=root123
+director_1 ansible_host={{subnet_start}}143 ansible_user=root ansible_password=root123
 
-director_2 ansible_host=10.164.227.144 ansible_user=root ansible_password=root123
+director_2 ansible_host={{subnet_start}}144 ansible_user=root ansible_password=root123
 
-master_1 ansible_host=10.164.227.145 ansible_user=root ansible_password=root123
+master_1 ansible_host={{subnet_start}}145 ansible_user=root ansible_password=root123
 
-master_2 ansible_host=10.164.227.146 ansible_user=root ansible_password=root123
+master_2 ansible_host={{subnet_start}}146 ansible_user=root ansible_password=root123
 
-master_3 ansible_host=10.164.227.147 ansible_user=root ansible_password=root123
+master_3 ansible_host={{subnet_start}}147 ansible_user=root ansible_password=root123
 
-worker_1 ansible_host=10.164.227.148 ansible_user=root ansible_password=root123
+worker_1 ansible_host={{subnet_start}}148 ansible_user=root ansible_password=root123
 
-worker_2 ansible_host=10.164.227.149 ansible_user=root ansible_password=root123
+worker_2 ansible_host={{subnet_start}}149 ansible_user=root ansible_password=root123
 
-worker_3 ansible_host=10.164.227.150 ansible_user=root ansible_password=root123
+worker_3 ansible_host={{subnet_start}}150 ansible_user=root ansible_password=root123
 
-worker_4 ansible_host=10.164.227.151 ansible_user=root ansible_password=root123
+worker_4 ansible_host={{subnet_start}}151 ansible_user=root ansible_password=root123
 
 
 [DIRECTOR]

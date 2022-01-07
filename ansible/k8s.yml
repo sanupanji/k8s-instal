@@ -12,9 +12,9 @@
 #   roles:
 #     - pre_check
 
-# - name: configure keepalived and haproxy
-#   hosts: MASTER
-#   any_errors_fatal: true
-#   gather_facts: no
-#   roles:
-#     - keepalived_haproxy
+- name: configure keepalived and haproxy
+  hosts: MASTER
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - keepalived_haproxy

@@ -46,7 +46,7 @@
     systemctl restart containerd
 
 - name: add kubernetes repo
-  shelll: |
+  shell: |
     cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
     [kubernetes]
     name=Kubernetes
@@ -59,17 +59,17 @@
     EOF
 
 - name: Set SELinux in permissive mode 
-  shelll: |
+  shell: |
     setenforce 0 
     sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config 
 
 - name: Install kubelet kubeadm kubectl 
-  shelll: |
+  shell: |
     yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes 
     systemctl enable --now kubelet 
 
 - name:  Install helm client  
-  shelll: |
+  shell: |
     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 
     chmod 700 get_helm.sh 
     ./get_helm.sh 

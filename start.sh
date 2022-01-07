@@ -1,3 +1,3 @@
 #!/bin/bash
 cd ansible
-ansible-playbook ec.yml -vvv
+ansible-playbook k8s.yml -vv

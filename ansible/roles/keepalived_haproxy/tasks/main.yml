@@ -1,0 +1,43 @@
+- name: create keepalived config directory
+  file:
+    path: /etc/keepalived
+    state: directory
+    mode: 0775
+
+- name: create haproxy config directory
+  file:
+    path: /etc/haproxy
+    state: directory
+    mode: 0775
+
+- name: create k8s manifests directory
+  file:
+    path: /etc/kubernetes/manifests
+    state: directory
+    mode: 0775
+    recurse: yes
+
+- name: copy keepalived config
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+
+- name: copy check_apiserver.sh
+  template:
+    src: check_apiserver.sh.j2
+    dest: /etc/keepalived/check_apiserver.sh
+
+- name: copy haproxy.cfg
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+
+- name: copy keepalived podtemplate
+  template:
+    src: keepalived.yaml.j2
+    dest: /etc/kubernetes/manifests/keepalived.yaml
+
+- name: copy haproxy podtemplate
+  template:
+    src: haproxy.yaml.j2
+    dest: /etc/kubernetes/manifests/haproxy.yaml

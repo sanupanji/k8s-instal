@@ -1,0 +1,8 @@
+- name: set hostname
+  shell: |
+    echo hostnamectl set-hostname {{inventory_hostname}}.{{FQDN}}
+
+# - name: create config
+#   template:
+#     src: hosts.j2
+#     dest: /etc/hosts

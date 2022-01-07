@@ -12,7 +12,8 @@ vrrp_script check_apiserver {
 }
 
 vrrp_instance VI_1 {
-    state {% if inventory_hostname == "master01" %}MASTER{%- else -%}BACKUP{%- endif %}
+    state {% if inventory_hostname == "master01" %}MASTER{%- else -%}BACKUP{% endif %}
+    
     interface {{interface}}
     virtual_router_id {{router_id}}
     priority 100

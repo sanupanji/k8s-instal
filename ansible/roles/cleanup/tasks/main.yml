@@ -1,0 +1,22 @@
+- name: swap off
+  shell: |
+    kubeadm reset -f
+    systemctl stop kubelet
+    systemctl stop docker
+    rm -rf /var/lib/cni/
+    rm -rf /var/lib/kubelet/*
+    rm -rf /etc/cni/
+    rm -rf /etc/kubernetes/*
+    rm -rf /var/lib/etcd/*
+    rm -rf ~/.kube
+    ifconfig docker0 down
+    ip link delete docker0
+    ifconfig cni-podman0 down
+    ip link delete cni-podman0
+    ifconfig tunl0 down
+    ip link set tunl0 down
+    ip link delete tunl0
+
+
+
+

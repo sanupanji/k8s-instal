@@ -1,92 +1,107 @@
-# - name: open ports for master nodes
-#   shell: |
-#     firewall-cmd --zone=public --permanent --add-port=6443/tcp
-#     firewall-cmd --zone=public --permanent --add-port=2379-2380/tcp
-#     firewall-cmd --zone=public --permanent --add-port=10250/tcp
-#     firewall-cmd --zone=public --permanent --add-port=10257/tcp
-#     firewall-cmd --zone=public --permanent --add-port=10259/tcp
-#     firewall-cmd --reload
-#   when: "'master' in inventory_hostname"
+- name: open ports for master nodes
+  shell: |
+    firewall-cmd --zone=public --permanent --add-port=6443/tcp
+    firewall-cmd --zone=public --permanent --add-port=2379-2380/tcp
+    firewall-cmd --zone=public --permanent --add-port=10250/tcp
+    firewall-cmd --zone=public --permanent --add-port=10257/tcp
+    firewall-cmd --zone=public --permanent --add-port=10259/tcp
+    firewall-cmd --reload
+  when: "'master' in inventory_hostname"
 
-# - name: open ports for worker nodes
-#   shell: |
-#     firewall-cmd --zone=public --permanent --add-port=10250/tcp
-#     firewall-cmd --zone=public --permanent --add-port=30000-32767/tcp
-#     firewall-cmd --reload
-#   when: "'worker' in inventory_hostname"
+- name: open ports for worker nodes
+  shell: |
+    firewall-cmd --zone=public --permanent --add-port=10250/tcp
+    firewall-cmd --zone=public --permanent --add-port=30000-32767/tcp
+    firewall-cmd --reload
+  when: "'worker' in inventory_hostname"
   
 - name: swap off
   shell: |
     swapoff -a; sed -i '/swap/d' /etc/fstab
     
-# - name: Enable Kernel modules 
-#   shell: |
-#     cat <<EOF | tee /etc/modules-load.d/containerd.conf
-#     overlay
-#     br_netfilter
-#     EOF
+- name: Enable Kernel modules 
+  shell: |
+    cat <<EOF | tee /etc/modules-load.d/containerd.conf
+    overlay
+    br_netfilter
+    EOF
 
-# - name: Load Kernel modules 
-#   shell: |
-#     modprobe overlay 
-#     modprobe br_netfilter 
+- name: Load Kernel modules 
+  shell: |
+    modprobe overlay 
+    modprobe br_netfilter 
 
 
-# - name: Add Kernel settings 
-#   shell: |
-#     cat >>/etc/sysctl.conf<<EOF
-#     net.bridge.bridge-nf-call-ip6tables = 1
-#     net.bridge.bridge-nf-call-iptables  = 1
-#     net.ipv4.ip_forward                 = 1
-#     EOF
+- name: Add Kernel settings 
+  shell: |
+    cat >>/etc/sysctl.conf<<EOF
+    net.bridge.bridge-nf-call-ip6tables = 1
+    net.bridge.bridge-nf-call-iptables  = 1
+    net.ipv4.ip_forward                 = 1
+    EOF
 
-# - name: Load sysctl
-#   shell: |
-#     sysctl --system
+- name: Load sysctl
+  shell: |
+    sysctl --system
 
-# - name: install docker and containerd
-#   shell: |
-#     dnf install -y https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
-#     dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-#     dnf install --nobest docker-ce docker-ce-cli -y
+- name: install docker and containerd
+  shell: |
+    dnf install -y https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
+    dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+    dnf install --nobest docker-ce docker-ce-cli -y
 
-# - name: load containerd config
-#   shell: |
-#     mkdir -p /etc/containerd 
-#     containerd config default | sudo tee /etc/containerd/config.toml 
-#     systemctl restart containerd 
+- name: load containerd config
+  shell: |
+    mkdir -p /etc/containerd 
+    containerd config default | sudo tee /etc/containerd/config.toml 
+    systemctl restart containerd 
 
-# - name: add cgroup driver to true
-#   shell: |
-#     sed -i 's/systemd_cgroup =.*/systemd_cgroup = true/'  /etc/containerd/config.toml 
-#     systemctl restart containerd
+- name: add cgroup driver to true
+  shell: |
+    sed -i 's/systemd_cgroup =.*/systemd_cgroup = true/'  /etc/containerd/config.toml 
+    systemctl restart containerd
 
-# - name: add kubernetes repo
-#   shell: |
-#     cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
-#     [kubernetes]
-#     name=Kubernetes
-#     baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
-#     enabled=1
-#     gpgcheck=1
-#     repo_gpgcheck=1
-#     gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-#     exclude=kubelet kubeadm kubectl
-#     EOF
+- name: enable docker 
+  shell: |
+    systemctl start docker
+    systemctl enable docker
 
-# - name: Set SELinux in permissive mode 
-#   shell: |
-#     setenforce 0 
-#     sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config 
 
-# - name: Install kubelet kubeadm kubectl 
-#   shell: |
-#     yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes 
-#     systemctl enable --now kubelet 
+- name: add docker daemon config
+  template:
+    src: docker-daemon.json.j2
+    dest: /etc/docker/daemon.json
 
-# - name:  Install helm client  
-#   shell: |
-#     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 
-#     chmod 700 get_helm.sh 
-#     ./get_helm.sh 
+- name: restart docker
+  shell: |
+    systemctl restart docker
+
+- name: add kubernetes repo
+  shell: |
+    cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+    [kubernetes]
+    name=Kubernetes
+    baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+    enabled=1
+    gpgcheck=1
+    repo_gpgcheck=1
+    gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    exclude=kubelet kubeadm kubectl
+    EOF
+
+- name: Set SELinux in permissive mode 
+  shell: |
+    setenforce 0 
+    sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config 
+
+- name: Install kubelet kubeadm kubectl 
+  shell: |
+    yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes 
+    systemctl enable --now kubelet 
+
+- name:  Install helm client  
+  shell: |
+    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 
+    chmod 700 get_helm.sh 
+    ./get_helm.sh 
 

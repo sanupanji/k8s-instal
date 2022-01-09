@@ -48,17 +48,17 @@
 
 - name: join master 2
   shell: |
-    {{join_command}} --control-plane --certificate-key {{join_cert}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}146
+    {{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}146
   when: "inventory_hostname == 'master02'"
 
 - name: join master 3
   shell: |
-    {{join_command}} --control-plane --certificate-key {{join_cert}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}147
+    {{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}147
   when: "inventory_hostname == 'master03'"
 
 - name: join workers
   shell: |
-    {{join_command}}
+    {{hostvars['master01']['join_command']}}
   when: "'worker' in inventory_hostname"
 
 

@@ -18,3 +18,10 @@
   gather_facts: no
   roles:
     - keepalived_haproxy
+
+- name: pre check
+  hosts: CLUSTER
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - setup_cluster

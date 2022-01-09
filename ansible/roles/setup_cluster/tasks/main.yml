@@ -1,7 +1,7 @@
-# - name: run in master01
-#   shell: |
-#     kubeadm init --control-plane-endpoint="{{apiserver_vip}}:{{apiserver_dest_port}}" --upload-certs --apiserver-advertise-address={{subnet_start}}145 --pod-network-cidr={{pod_network_cidr}} --apiserver-bind-port={{apiserver_src_port}} --v=5
-#   when: "inventory_hostname == 'master01'"
+- name: run in master01
+  shell: |
+    kubeadm init --control-plane-endpoint="{{apiserver_vip}}:{{apiserver_dest_port}}" --upload-certs --apiserver-advertise-address={{subnet_start}}145 --pod-network-cidr={{pod_network_cidr}} --apiserver-bind-port={{apiserver_src_port}} --v=5
+  when: "inventory_hostname == 'master01'"
 
 - pause:
     seconds: 120
@@ -24,8 +24,40 @@
     kubectl apply -f /tmp/calico.yaml
   when: "inventory_hostname == 'master01'"
 
+- name: get join command
+  shell: |
+    kubeadm token create --print-join-command
+  when: "inventory_hostname == 'master01'"
+  register: result
 
+- name: set join_command
+  set_facts:
+    join_command: "{{ result.stdout | trim }}"
 
+- name: get cert
+  shell: |
+    kubeadm init phase upload-certs --upload-certs | tail -1
+  when: "inventory_hostname == 'master01'"
+  register: result
+
+- name: set join_cert
+  set_facts:
+    join_cert: "{{ result.stdout | trim }}"
+
+- name: join master 2
+  shell: |
+    {{join_command}} --control-plane --certificate-key {{join_cert}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}146
+  when: "inventory_hostname == 'master02'"
+
+- name: join master 3
+  shell: |
+    {{join_command}} --control-plane --certificate-key {{join_cert}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}147
+  when: "inventory_hostname == 'master03'"
+
+- name: join workers
+  shell: |
+    {{join_command}}
+  when: "'worker' in inventory_hostname"
 
 
 

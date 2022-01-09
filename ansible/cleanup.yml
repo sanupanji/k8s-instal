@@ -1,0 +1,6 @@
+- name: cleanup
+  hosts: CLUSTER
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - cleanup

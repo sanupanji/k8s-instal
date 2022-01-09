@@ -1,4 +1,4 @@
-- name: swap off
+- name: cleanup 1
   shell: |
     kubeadm reset -f
     systemctl stop kubelet
@@ -9,13 +9,24 @@
     rm -rf /etc/kubernetes/*
     rm -rf /var/lib/etcd/*
     rm -rf ~/.kube
+
+- name: cleanup 2
+  shell: |
     ifconfig docker0 down
     ip link delete docker0
     ifconfig cni-podman0 down
     ip link delete cni-podman0
+
+- name: cleanup 3
+  shell: |
     ifconfig tunl0 down
     ip link set tunl0 down
     ip link delete tunl0
+
+- name: cleanup 4
+  shell: |
+    systemctl start docker
+
 
 
 

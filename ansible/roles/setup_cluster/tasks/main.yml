@@ -1,21 +1,21 @@
 - name: run in master01
   shell: |
-    echo kubeadm init --control-plane-endpoint="{{apiserver_vip}}:{{apiserver_dest_port}}" --upload-certs --apiserver-advertise-address={{subnet_start}}145 --pod-network-cidr={{pod_network_cidr}} --apiserver-bind-port={{apiserver_src_port}} --v=5
+    kubeadm init --control-plane-endpoint="{{apiserver_vip}}:{{apiserver_dest_port}}" --upload-certs --apiserver-advertise-address={{subnet_start}}145 --pod-network-cidr={{pod_network_cidr}} --apiserver-bind-port={{apiserver_src_port}} --v=5
   when: "inventory_hostname == 'master01'"
 
-# - pause:
-#     seconds: 120
+- pause:
+    seconds: 120
 
-# - name: get kube config
-#   shell: |
-#     mkdir -p $HOME/.kube
-#     cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-#     chown $(id -u):$(id -g) $HOME/.kube/config
-#   when: "inventory_hostname == 'master01'"
+- name: get kube config
+  shell: |
+    mkdir -p $HOME/.kube
+    cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    chown $(id -u):$(id -g) $HOME/.kube/config
+  when: "inventory_hostname == 'master01'"
 
 - name: copy calico yaml
   template:
-    src: calico.yaml.j2
+    src: calico3.18.yaml.j2
     dest: /tmp/calico.yaml
   when: "inventory_hostname == 'master01'"
 

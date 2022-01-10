@@ -4216,6 +4216,8 @@ spec:
                 configMapKeyRef:
                   name: calico-config
                   key: veth_mtu
+            - name: IP_AUTODETECTION_METHOD
+              value: "interface=ens192"
             # The default IPv4 pool to create on startup if none exists. Pod IPs will be
             # chosen from this range. Changing this value after installation will have
             # no effect. This should fall within `--cluster-cidr`.

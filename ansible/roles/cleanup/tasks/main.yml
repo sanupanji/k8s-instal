@@ -11,6 +11,7 @@
     rm -rf ~/.kube
 
 - name: cleanup 2
+  ignore_errors: yes
   shell: |
     ifconfig docker0 down
     ip link delete docker0
@@ -18,12 +19,18 @@
     ip link delete cni-podman0
 
 - name: cleanup 3
+  ignore_errors: yes
   shell: |
     ifconfig tunl0 down
     ip link set tunl0 down
     ip link delete tunl0
 
 - name: cleanup 4
+  ignore_errors: yes
+  shell: |
+    ip addr flush dev tunl0
+
+- name: cleanup 5
   shell: |
     systemctl start docker
 

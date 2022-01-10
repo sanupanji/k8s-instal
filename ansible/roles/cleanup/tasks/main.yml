@@ -15,6 +15,10 @@
   shell: |
     ifconfig docker0 down
     ip link delete docker0
+  
+- name: cleanup 2
+  ignore_errors: yes
+  shell: |
     ifconfig cni-podman0 down
     ip link delete cni-podman0
 

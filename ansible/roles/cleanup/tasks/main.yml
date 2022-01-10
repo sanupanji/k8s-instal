@@ -29,10 +29,18 @@
     ip link set tunl0 down
     ip link delete tunl0
 
+- name: cleanup 3
+  ignore_errors: yes
+  shell: |
+    ifconfig flannel.1 down
+    ip link set flannel.1 down
+    ip link delete flannel.1
+
 - name: cleanup 4
   ignore_errors: yes
   shell: |
     ip addr flush dev tunl0
+    ip addr flush dev flannel.1
 
 - name: cleanup 5
   shell: |

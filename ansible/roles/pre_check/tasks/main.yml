@@ -5,6 +5,8 @@
     firewall-cmd --zone=public --permanent --add-port=10250/tcp
     firewall-cmd --zone=public --permanent --add-port=10257/tcp
     firewall-cmd --zone=public --permanent --add-port=10259/tcp
+    firewall-cmd --zone=public --permanent --add-port=8443/tcp
+    firewall-cmd --zone=public --permanent --add-port=443/tcp
     firewall-cmd --reload
   when: "'master' in inventory_hostname"
 
@@ -12,6 +14,8 @@
   shell: |
     firewall-cmd --zone=public --permanent --add-port=10250/tcp
     firewall-cmd --zone=public --permanent --add-port=30000-32767/tcp
+    firewall-cmd --zone=public --permanent --add-port=8443/tcp
+    firewall-cmd --zone=public --permanent --add-port=443/tcp
     firewall-cmd --reload
   when: "'worker' in inventory_hostname"
   
@@ -50,16 +54,16 @@
     dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
     dnf install --nobest docker-ce docker-ce-cli -y
 
-- name: load containerd config
-  shell: |
-    mkdir -p /etc/containerd 
-    containerd config default | sudo tee /etc/containerd/config.toml 
-    systemctl restart containerd 
+# - name: load containerd config
+#   shell: |
+#     mkdir -p /etc/containerd 
+#     containerd config default | sudo tee /etc/containerd/config.toml 
+#     systemctl restart containerd 
 
-- name: add cgroup driver to true
-  shell: |
-    sed -i 's/systemd_cgroup =.*/systemd_cgroup = true/'  /etc/containerd/config.toml 
-    systemctl restart containerd
+# - name: add cgroup driver to true
+#   shell: |
+#     sed -i 's/systemd_cgroup =.*/systemd_cgroup = true/'  /etc/containerd/config.toml 
+#     systemctl restart containerd
 
 - name: enable docker 
   shell: |
@@ -74,6 +78,7 @@
 
 - name: restart docker
   shell: |
+    systemctl daemon-reload
     systemctl restart docker
 
 - name: add kubernetes repo

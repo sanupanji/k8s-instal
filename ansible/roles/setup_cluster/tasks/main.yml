@@ -46,20 +46,29 @@
     join_cert: "{{ result.stdout | trim }}"
   when: "inventory_hostname == 'master01'"
 
-- name: join master 2
-  shell: |
-    {{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}146 --v=5
-  when: "inventory_hostname == 'master02'"
+- debug:
+    msg: "{{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}146 --v=5"
 
-- name: join master 3
-  shell: |
-    {{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}147 --v=5
-  when: "inventory_hostname == 'master03'"
+- debug:
+    msg: "{{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}147 --v=5"
+    
+- debug:
+    msg: "{{hostvars['master01']['join_command']}}"
+    
+# - name: join master 2
+#   shell: |
+#     {{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}146 --v=5
+#   when: "inventory_hostname == 'master02'"
 
-- name: join workers
-  shell: |
-    {{hostvars['master01']['join_command']}}
-  when: "'worker' in inventory_hostname"
+# - name: join master 3
+#   shell: |
+#     {{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}147 --v=5
+#   when: "inventory_hostname == 'master03'"
+
+# - name: join workers
+#   shell: |
+#     {{hostvars['master01']['join_command']}}
+#   when: "'worker' in inventory_hostname"
 
 
 

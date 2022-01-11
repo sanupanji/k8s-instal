@@ -9,7 +9,11 @@
     firewall-cmd --zone=public --permanent --add-port=443/tcp
     firewall-cmd --zone=public --permanent --add-port=179/tcp
     firewall-cmd --zone=public --permanent --add-port=4789/udp
+    firewall-cmd --permanent --add-port=8285/udp
+    firewall-cmd --permanent --add-port=8472/udp
+    firewall-cmd --add-masquerade --permanent
     firewall-cmd --reload
+    systemctl restart firewalld
   when: "'master' in inventory_hostname"
 
 - name: open ports for worker nodes
@@ -20,7 +24,10 @@
     firewall-cmd --zone=public --permanent --add-port=443/tcp
     firewall-cmd --zone=public --permanent --add-port=179/tcp
     firewall-cmd --zone=public --permanent --add-port=4789/udp
+    firewall-cmd --permanent --add-port=8285/udp
+    firewall-cmd --permanent --add-port=8472/udp
     firewall-cmd --reload
+    systemctl restart firewalld
   when: "'worker' in inventory_hostname"
   
 - name: swap off

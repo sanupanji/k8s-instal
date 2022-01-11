@@ -16,7 +16,8 @@ vrrp_instance VI_1 {
     
     interface {{interface}}
     virtual_router_id {{router_id}}
-    priority 100
+    priority {% if inventory_hostname == "master01" %}100{%- else -%}98{% endif %}
+    
     authentication {
         auth_type PASS
         auth_pass cdd

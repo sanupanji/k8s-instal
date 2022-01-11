@@ -13,6 +13,13 @@
 #     chown $(id -u):$(id -g) $HOME/.kube/config
 #   when: "inventory_hostname == 'master01'"
 
+- name: copy flannel yaml
+  template:
+    src: flannel.yaml.j2
+    dest: /tmp/flannel.yaml
+  when: "inventory_hostname == 'master01'"
+
+
 # - name: copy calico yaml
 #   template:
 #     src: calico.yaml.j2

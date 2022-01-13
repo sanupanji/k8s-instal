@@ -19,8 +19,9 @@
 - name: cleanup 2
   ignore_errors: yes
   shell: |
-    ifconfig cni-podman0 down
-    ip link delete cni-podman0
+    ifconfig cni0 down
+    ip link set cni0 down
+    ip link delete cni0
 
 - name: cleanup 3
   ignore_errors: yes
@@ -41,7 +42,8 @@
   shell: |
     ip addr flush dev tunl0
     ip addr flush dev flannel.1
-
+    ip addr flush dev cni0
+    
 - name: cleanup 5
   shell: |
     systemctl start docker

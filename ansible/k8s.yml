@@ -1,23 +1,23 @@
-- name: host setup
-  hosts: all
-  any_errors_fatal: true
-  gather_facts: no
-  roles:
-    - host_setup
+# - name: host setup
+#   hosts: all
+#   any_errors_fatal: true
+#   gather_facts: no
+#   roles:
+#     - host_setup
 
-- name: pre check
-  hosts: CLUSTER
-  any_errors_fatal: true
-  gather_facts: no
-  roles:
-    - pre_check
+# - name: pre check
+#   hosts: CLUSTER
+#   any_errors_fatal: true
+#   gather_facts: no
+#   roles:
+#     - pre_check
 
-- name: configure keepalived and haproxy
-  hosts: MASTER
-  any_errors_fatal: true
-  gather_facts: no
-  roles:
-    - keepalived_haproxy
+# - name: configure keepalived and haproxy
+#   hosts: MASTER
+#   any_errors_fatal: true
+#   gather_facts: no
+#   roles:
+#     - keepalived_haproxy
 
 - name: pre check
   hosts: CLUSTER

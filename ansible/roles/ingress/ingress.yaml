@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+        - path: /apple
+          backend:
+            serviceName: nginx-lab
+            servicePort: 80
+        - path: /banana
+          backend:
+            serviceName: nginx-lab-x
+            servicePort: 80

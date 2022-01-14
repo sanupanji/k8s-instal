@@ -10,9 +10,12 @@ spec:
       paths:
         - path: /apple
           backend:
-            serviceName: nginx-lab
-            servicePort: 80
+            service:
+              name: nginx-lab
+              port:
+                number: 80
         - path: /banana
           backend:
-            serviceName: nginx-lab-x
-            servicePort: 80
+            name: nginx-lab-x
+              port:
+                number: 80

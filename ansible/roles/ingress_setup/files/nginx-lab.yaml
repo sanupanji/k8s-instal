@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: nginx-test
+  name: nginx-deploy
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      volumes:
+      - name: webdata
+        emptyDir: {}
+      initContainers:
+      - name: web-content
+        image: busybox
+        volumeMounts:
+        - name: webdata
+          mountPath: "/webdata"
+        command: ["/bin/sh", "-c", 'echo "<h1>POD: $(hostname)</h1><h2>IP:  $(hostname -i)</h2>" > /webdata/index.html']
+      containers:
+      - image: nginx
+        name: nginx
+        volumeMounts:
+        - name: webdata
+          mountPath: "/usr/share/nginx/html"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    run: nginx-test
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

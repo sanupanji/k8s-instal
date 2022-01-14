@@ -16,6 +16,7 @@ spec:
                 number: 80
         - path: /banana
           backend:
-            name: nginx-lab-x
+            service:
+              name: nginx-lab-x
               port:
                 number: 80

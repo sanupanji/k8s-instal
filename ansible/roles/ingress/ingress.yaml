@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: example-ingress
@@ -6,19 +6,13 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - http:
+  - host: nginx.dc.itte.com
+    http:
       paths:
-        - path: /apple
+        - path: /
           pathType: Prefix
           backend:
             service:
               name: nginx-lab
-              port:
-                number: 80
-        - path: /banana
-          pathType: Prefix
-          backend:
-            service:
-              name: nginx-lab-x
               port:
                 number: 80

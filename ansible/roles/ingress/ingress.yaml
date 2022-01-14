@@ -9,12 +9,14 @@ spec:
   - http:
       paths:
         - path: /apple
+          pathType: Prefix
           backend:
             service:
               name: nginx-lab
               port:
                 number: 80
         - path: /banana
+          pathType: Prefix
           backend:
             service:
               name: nginx-lab-x

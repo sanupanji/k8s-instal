@@ -1,17 +1,17 @@
 - name: run in master01
   shell: |
-    echo kubeadm init --control-plane-endpoint="{{apiserver_vip}}:{{apiserver_dest_port}}" --upload-certs --apiserver-advertise-address={{subnet_start}}145 --pod-network-cidr={{pod_network_cidr}} --apiserver-bind-port={{apiserver_src_port}} --v=5
+    kubeadm init --control-plane-endpoint="{{apiserver_vip}}:{{apiserver_dest_port}}" --upload-certs --apiserver-advertise-address={{subnet_start}}145 --pod-network-cidr={{pod_network_cidr}} --apiserver-bind-port={{apiserver_src_port}} --v=5
   when: "inventory_hostname == 'master01'"
 
-# - pause:
-#     seconds: 120
+- pause:
+    seconds: 120
 
-# - name: get kube config
-#   shell: |
-#     mkdir -p $HOME/.kube
-#     cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-#     chown $(id -u):$(id -g) $HOME/.kube/config
-#   when: "inventory_hostname == 'master01'"
+- name: get kube config
+  shell: |
+    mkdir -p $HOME/.kube
+    cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    chown $(id -u):$(id -g) $HOME/.kube/config
+  when: "inventory_hostname == 'master01'"
 
 # - name: copy flannel yaml
 #   template:
@@ -26,56 +26,67 @@
     dest: /tmp/calico.yaml
   when: "inventory_hostname == 'master01'"
 
-# - name: apply calico yaml
-#   shell: |
-#     kubectl apply -f /tmp/calico.yaml
-#   when: "inventory_hostname == 'master01'"
+- name: apply calico yaml
+  shell: |
+    kubectl apply -f /tmp/calico.yaml
+  when: "inventory_hostname == 'master01'"
 
-# - name: get join command
-#   shell: |
-#     kubeadm token create --print-join-command
-#   when: "inventory_hostname == 'master01'"
-#   register: result
+- name: get join command
+  shell: |
+    kubeadm token create --print-join-command
+  when: "inventory_hostname == 'master01'"
+  register: result
 
-# - name: set join_command
-#   set_fact:
-#     join_command: "{{ result.stdout | trim }}"
-#   when: "inventory_hostname == 'master01'"
+- name: set join_command
+  set_fact:
+    join_command: "{{ result.stdout | trim }}"
+  when: "inventory_hostname == 'master01'"
 
-# - name: get cert
-#   shell: |
-#     kubeadm init phase upload-certs --upload-certs | tail -1
-#   when: "inventory_hostname == 'master01'"
-#   register: result
+- name: get cert
+  shell: |
+    kubeadm init phase upload-certs --upload-certs | tail -1
+  when: "inventory_hostname == 'master01'"
+  register: result
 
-# - name: set join_cert
-#   set_fact:
-#     join_cert: "{{ result.stdout | trim }}"
-#   when: "inventory_hostname == 'master01'"
+- name: set join_cert
+  set_fact:
+    join_cert: "{{ result.stdout | trim }}"
+  when: "inventory_hostname == 'master01'"
 
-# - debug:
-#     msg: "{{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}146 --v=5"
+- debug:
+    msg: "{{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}146 --v=5"
 
-# - debug:
-#     msg: "{{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}147 --v=5"
+- debug:
+    msg: "{{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}147 --v=5"
     
-# - debug:
-#     msg: "{{hostvars['master01']['join_command']}}"
+- debug:
+    msg: "{{hostvars['master01']['join_command']}}"
     
-# # - name: join master 2
-# #   shell: |
-# #     {{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}146 --v=5
-# #   when: "inventory_hostname == 'master02'"
 
-# # - name: join master 3
-# #   shell: |
-# #     {{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}147 --v=5
-# #   when: "inventory_hostname == 'master03'"
+- pause:
+    seconds: 120
 
-# # - name: join workers
-# #   shell: |
-# #     {{hostvars['master01']['join_command']}}
-# #   when: "'worker' in inventory_hostname"
+- name: join master 2
+  shell: |
+    {{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}146 --v=5
+  when: "inventory_hostname == 'master02'"
+
+
+- pause:
+    seconds: 120
+
+- name: join master 3
+  shell: |
+    {{hostvars['master01']['join_command']}} --control-plane --certificate-key {{hostvars['master01']['join_cert']}} --apiserver-bind-port={{apiserver_src_port}} --apiserver-advertise-address={{subnet_start}}147 --v=5
+  when: "inventory_hostname == 'master03'"
+
+- pause:
+    seconds: 120
+    
+- name: join workers
+  shell: |
+    {{hostvars['master01']['join_command']}}
+  when: "'worker' in inventory_hostname"
 
 
 

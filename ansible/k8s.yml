@@ -26,9 +26,9 @@
   roles:
     - setup_cluster
 
-# - name: get kube config to  all servers
-#   hosts: all
-#   any_errors_fatal: true
-#   gather_facts: no
-#   roles:
-#     - kube_config
+- name: get kube config to  all servers
+  hosts: all
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - kube_config

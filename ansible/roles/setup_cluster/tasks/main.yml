@@ -33,9 +33,14 @@
     dest: /tmp/calico.yaml
   when: "inventory_hostname == 'master01'"
 
+# - name: apply calico yaml
+#   shell: |
+#     kubectl apply -f /tmp/calico.yaml
+#   when: "inventory_hostname == 'master01'"
+
 - name: apply calico yaml
   shell: |
-    kubectl apply -f /tmp/calico.yaml
+    kubectl apply -f https://docs.projectcalico.org/v3.18/manifests/calico.yaml
   when: "inventory_hostname == 'master01'"
 
 - name: get join command

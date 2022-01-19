@@ -1,3 +1,5 @@
+
+
 - name: get kube config
   shell: |
     mkdir -p $HOME/.kube

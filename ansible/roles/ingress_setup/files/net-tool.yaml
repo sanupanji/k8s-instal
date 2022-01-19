@@ -55,12 +55,16 @@ spec:
   selector:
     app: network-multitool
   ports:
-  - port: 80
+  - name: http
+    port: 80
     targetPort: 80
-  - port: 443
+  - name: https
+    port: 443
     targetPort: 443
-  - port: 1180
+  - name: container-http
+    port: 1180
     targetPort: 1180
-  - port: 11443
+  - name: container-https
+    port: 11443
     targetPort: 11443
 

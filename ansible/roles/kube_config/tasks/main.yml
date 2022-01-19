@@ -4,6 +4,13 @@
     state: directory
     mode: 0775
     recurse: yes
+  when:
+
+- name: fetch
+  fetch:
+    src: ~/.kube/config
+    dest: ~/.kube/config
+    flat: yes
 
 # - name: get kube config
 #   shell: |

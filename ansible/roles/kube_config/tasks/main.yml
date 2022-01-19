@@ -1,11 +1,16 @@
+- name: create temp dir
+  file:
+    path: {{ansible_env.HOME}}/.kube
+    state: directory
+    mode: 0775
+    recurse: yes
 
-
-- name: get kube config
-  shell: |
-    mkdir -p $HOME/.kube
-    scp root@master01:~/.kube/config $HOME/.kube/config
-    chown $(id -u):$(id -g) $HOME/.kube/config
-    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
-    echo 'alias k=kubectl' >>~/.bashrc
-    echo 'complete -F __start_kubectl k' >>~/.bashrc
-  when: "'master01' not in inventory_hostname"
+# - name: get kube config
+#   shell: |
+#     mkdir -p $HOME/.kube
+#     scp root@master01:~/.kube/config $HOME/.kube/config
+#     chown $(id -u):$(id -g) $HOME/.kube/config
+#     kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+#     echo 'alias k=kubectl' >>~/.bashrc
+#     echo 'complete -F __start_kubectl k' >>~/.bashrc
+#   when: "'master01' not in inventory_hostname"

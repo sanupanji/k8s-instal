@@ -8,8 +8,6 @@ master02 ansible_host={{subnet_start}}146 ansible_user=root ansible_password=roo
 
 master03 ansible_host={{subnet_start}}147 ansible_user=root ansible_password=root123
 
-worker01 ansible_host={{subnet_start}}148 ansible_user=root ansible_password=root123
-
 worker02 ansible_host={{subnet_start}}149 ansible_user=root ansible_password=root123
 
 worker03 ansible_host={{subnet_start}}150 ansible_user=root ansible_password=root123
@@ -27,7 +25,6 @@ master02
 master03
 
 [WORKER]
-worker01
 worker02
 worker03
 worker04

@@ -1,0 +1,13 @@
+- name: host setup
+  hosts: worker01
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - host_setup
+
+- name: pre check
+  hosts: worker01
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - pre_check

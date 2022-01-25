@@ -121,7 +121,7 @@
 
 - name: Install kubelet kubeadm kubectl 
   shell: |
-    yum install -y kubelet-1.22.0-00 kubeadm-1.22.0-00 kubectl-1.22.0-00 --disableexcludes=kubernetes 
+    yum install -y kubelet-{{k8s_version}} kubeadm-{{k8s_version}} kubectl-{{k8s_version}} --disableexcludes=kubernetes 
     systemctl enable --now kubelet 
 
 - name:  Install helm client  

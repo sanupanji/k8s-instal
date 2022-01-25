@@ -1,35 +1,40 @@
-- name: open ports for master nodes
-  shell: |
-    firewall-cmd --zone=public --permanent --add-port=6443/tcp
-    firewall-cmd --zone=public --permanent --add-port=2379-2380/tcp
-    firewall-cmd --zone=public --permanent --add-port=10250/tcp
-    firewall-cmd --zone=public --permanent --add-port=10257/tcp
-    firewall-cmd --zone=public --permanent --add-port=10259/tcp
-    firewall-cmd --zone=public --permanent --add-port=8443/tcp
-    firewall-cmd --zone=public --permanent --add-port=443/tcp
-    firewall-cmd --zone=public --permanent --add-port=179/tcp
-    firewall-cmd --zone=public --permanent --add-port=4789/udp
-    firewall-cmd --permanent --add-port=8285/udp
-    firewall-cmd --permanent --add-port=8472/udp
-    firewall-cmd --add-masquerade --permanent
-    firewall-cmd --reload
-    systemctl restart firewalld
-  when: "'master' in inventory_hostname"
+# - name: open ports for master nodes
+#   shell: |
+#     firewall-cmd --zone=public --permanent --add-port=6443/tcp
+#     firewall-cmd --zone=public --permanent --add-port=2379-2380/tcp
+#     firewall-cmd --zone=public --permanent --add-port=10250/tcp
+#     firewall-cmd --zone=public --permanent --add-port=10257/tcp
+#     firewall-cmd --zone=public --permanent --add-port=10259/tcp
+#     firewall-cmd --zone=public --permanent --add-port=8443/tcp
+#     firewall-cmd --zone=public --permanent --add-port=443/tcp
+#     firewall-cmd --zone=public --permanent --add-port=179/tcp
+#     firewall-cmd --zone=public --permanent --add-port=4789/udp
+#     firewall-cmd --permanent --add-port=8285/udp
+#     firewall-cmd --permanent --add-port=8472/udp
+#     firewall-cmd --add-masquerade --permanent
+#     firewall-cmd --reload
+#     systemctl restart firewalld
+#   when: "'master' in inventory_hostname"
 
-- name: open ports for worker nodes
-  shell: |
-    firewall-cmd --zone=public --permanent --add-port=10250/tcp
-    firewall-cmd --zone=public --permanent --add-port=30000-32767/tcp
-    firewall-cmd --zone=public --permanent --add-port=8443/tcp
-    firewall-cmd --zone=public --permanent --add-port=443/tcp
-    firewall-cmd --zone=public --permanent --add-port=179/tcp
-    firewall-cmd --zone=public --permanent --add-port=4789/udp
-    firewall-cmd --permanent --add-port=8285/udp
-    firewall-cmd --permanent --add-port=8472/udp
-    firewall-cmd --reload
-    systemctl restart firewalld
-  when: "'worker' in inventory_hostname"
+# - name: open ports for worker nodes
+#   shell: |
+#     firewall-cmd --zone=public --permanent --add-port=10250/tcp
+#     firewall-cmd --zone=public --permanent --add-port=30000-32767/tcp
+#     firewall-cmd --zone=public --permanent --add-port=8443/tcp
+#     firewall-cmd --zone=public --permanent --add-port=443/tcp
+#     firewall-cmd --zone=public --permanent --add-port=179/tcp
+#     firewall-cmd --zone=public --permanent --add-port=4789/udp
+#     firewall-cmd --permanent --add-port=8285/udp
+#     firewall-cmd --permanent --add-port=8472/udp
+#     firewall-cmd --reload
+#     systemctl restart firewalld
+#   when: "'worker' in inventory_hostname"
   
+- name: disable firewalld
+  shell: |
+    systemctl stop firewalld
+    systemctl disable firewalld
+
 - name: swap off
   shell: |
     swapoff -a; sed -i '/swap/d' /etc/fstab
@@ -46,6 +51,11 @@
     modprobe overlay 
     modprobe br_netfilter 
 
+- name: Add Kernel settings 
+  shell: |
+    sed -i '/net.bridge.bridge-nf-call-ip6tables/d' /etc/sysctl.conf
+    sed -i '/net.bridge.bridge-nf-call-iptables/d' /etc/sysctl.conf
+    sed -i '/net.ipv4.ip_forward/d' /etc/sysctl.conf
 
 - name: Add Kernel settings 
   shell: |
@@ -80,7 +90,6 @@
   shell: |
     systemctl start docker
     systemctl enable docker
-
 
 - name: add docker daemon config
   template:

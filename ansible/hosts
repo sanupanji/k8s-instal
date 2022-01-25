@@ -23,8 +23,11 @@ director02
 
 [MASTER]
 master01
+master02
+master03
 
 [WORKER]
+worker01
 worker02
 worker03
 worker04

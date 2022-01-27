@@ -55,16 +55,14 @@
 
 
 
-1	Introduction
+## 1 Introduction
 
-1.1                    Document History
+### 1.1 Document History
 
-Table 1       Document History
-
-
-1.2                    Target Audience
+Table 1  Document History
 
 
+### 1.2 Target Audience
 
 
 
@@ -78,15 +76,17 @@ Table 1       Document History
 
 
 
-2	Architecture
+
+
+## 2	Architecture
 
 
  
 
 
-3	Prerequisite 
+## 3	Prerequisite 
 
-3.1	Gather Details
+### 3.1	Gather Details
 
 	
 Director Server IPs	
@@ -121,55 +121,67 @@ Kubernetes and its components versions.
 
 
 
-3.2	Check Network Connectivity
+## 3.2	Check Network Connectivity
 Full network connectivity among all machines in the cluster. You can use either a public or a private network 
-3.3	Check and Open Ports
+
+## 3.3	Check and Open Ports
 Below ports should be open 
   
   
-3.4	Set hostname 
+## 3.4	Set hostname 
 Like for master 1: 
 hostnamectl set-hostname master01.<FQDN>
 add to /etc/hosts
  
-3.5	Disable swap 
+## 3.5	Disable swap 
 swapoff -a; sed -i '/swap/d' /etc/fstab 
-Disable Firewall (should not disable firewall fully) 
+
+## 3.6 Disable Firewall (should not disable firewall fully) 
   systemctl stop firewalld
   systemctl disable firewalld
-3.6	Enable and Load Kernel modules 
+
+## 3.7	Enable and Load Kernel modules 
+```
 cat <<EOF | tee /etc/modules-load.d/containerd.conf 
 overlay 
 br_netfilter 
 EOF 
- 
 modprobe overlay 
 modprobe br_netfilter 
-3.7	Add Kernel settings 
-sed -i '/net.bridge.bridge-nf-call-ip6tables/d' /etc/sysctl.conf
+```
+
+### 3.8	Add Kernel settings 
+```
+	sed -i '/net.bridge.bridge-nf-call-ip6tables/d' /etc/sysctl.conf
     sed -i '/net.bridge.bridge-nf-call-iptables/d' /etc/sysctl.conf
     sed -i '/net.ipv4.ip_forward/d' /etc/sysctl.conf
-  cat >>/etc/sysctl.conf<<EOF
+	
+	cat >>/etc/sysctl.conf<<EOF
     net.bridge.bridge-nf-call-ip6tables = 1
     net.bridge.bridge-nf-call-iptables  = 1
     net.ipv4.ip_forward                 = 1
     EOF
-sysctl --system
- 
-4	Pre-Installation Steps
+	
+	sysctl --system
+```
 
-4.1	Installing docker as runtime  
-yum install -y yum-utils 
-yum-config-manager \
-    --add-repo \
-    https://download.docker.com/linux/rhel/docker-ce.repo
+## 4	Pre-Installation Steps
+
+### 4.1	Installing docker as runtime  
+```
+	yum install -y yum-utils 
+	yum-config-manager \
+		--add-repo \
+		https://download.docker.com/linux/rhel/docker-ce.repo
  
-yum install docker-ce docker-ce-cli containerd.io 
+	yum install docker-ce docker-ce-cli containerd.io 
  
-systemctl start docker 
-systemctl enable docker 
- 
+	systemctl start docker 
+	systemctl enable docker 
+```
+
 To use the systemd cgroup driver with docker, set  
+```
 { 
   "exec-opts": ["native.cgroupdriver=systemd"], 
   "log-driver": "json-file", 
@@ -178,13 +190,16 @@ To use the systemd cgroup driver with docker, set 
   }, 
   "storage-driver": "overlay2" 
 } 
- 
-  
-If you apply this change make sure to restart docker again:  
+``` 
+
+If you apply this change make sure to restart docker again:
+```
 systemctl daemon-reload 
 systemctl restart docker  
+```
  
-4.2	Installing Kubeadm, kubelet and kubectl (on all nodes, kubectl is optional in worker nodes) 
+### 4.2	Installing Kubeadm, kubelet and kubectl (on all nodes, kubectl is optional in worker nodes) 
+```
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -195,23 +210,27 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kubelet kubeadm kubectl
 EOF
- 
-# Set SELinux in permissive mode (effectively disabling it) 
+``` 
+ Set SELinux in permissive mode (effectively disabling it) 
+```
 sudo setenforce 0 
 sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config 
- 
+``` 
+install:
+```
 sudo yum install -y kubelet-1.21.1-00 kubeadm-1.21.1-00 kubectl-1.21.1-00 --disableexcludes=kubernetes 
- 
 sudo systemctl enable --now kubelet 
+``` 
+### 4.3	 Install helm client (optional in worker nodes) 
  
-4.3	 Install helm client (optional in worker nodes) 
- 
+```
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 
  
 chmod 700 get_helm.sh 
 ./get_helm.sh
+```
  
-4.4	Configure keepalived and haproxy 
+### 4.4	Configure keepalived and haproxy 
 Configuration: https://github.com/kubernetes/kubeadm/blob/main/docs/ha-considerations.md#keepalived-and-haproxy 
 Get the interface: 
 ip a s #check the interface with host ip 

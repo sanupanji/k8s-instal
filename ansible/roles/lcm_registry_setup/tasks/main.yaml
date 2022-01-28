@@ -1,0 +1,16 @@
+helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --create-namespace --namespace nfs-external-provisioner --set nfs.server=10.164.227.145 --set nfs.path=/data/repositories --set storageClass.name=network-block
+kubectl patch storageclass network-block -n nfs-external-provisioner  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
+
+htpasswd -cBb htpasswd admin ericsson123
+kubectl create secret generic  cr-registry-credentials --from-file=htpasswd=./htpasswd -n kube-system
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -config registry.conf
+kubectl create secret  tls cr-registry-tls  -n kube-system  --key="tls.key" --cert="tls.crt"
+
+mkdir -p /etc/docker/certs.d/k8s-registry.<service FQDN>
+vi /etc/docker/certs.d/k8s-registry.<service FQDN> /tls.crt
+Copy the tls.crt created in Section 2.2.3 Step 2
+service docker restart
+

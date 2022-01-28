@@ -1,0 +1,20 @@
+[ req ]
+default_bits  = 2048
+distinguished_name = req_distinguished_name
+req_extensions  = req_ext
+prompt = no
+
+[ req_distinguished_name ]
+countryName = SE
+stateOrProvinceName = Stockholm
+localityName = Stockholm
+organizationName = Ericsson
+organizationalUnitName = IT SERVICES
+commonName = {{cdd_dns_name}}
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = {{cdd_dns_name}}
+DNS.2 = *.{{cdd_dns_name}}

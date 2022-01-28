@@ -13,12 +13,16 @@
     flat: yes
   when: "inventory_hostname == 'master01'"
 
-# - name: get kube config
-#   shell: |
-#     mkdir -p $HOME/.kube
-#     scp root@master01:~/.kube/config $HOME/.kube/config
-#     chown $(id -u):$(id -g) $HOME/.kube/config
-#     kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
-#     echo 'alias k=kubectl' >>~/.bashrc
-#     echo 'complete -F __start_kubectl k' >>~/.bashrc
-#   when: "'master01' not in inventory_hostname"
+- name: copy to other servers
+  copy:
+    src: ~/.kube/config
+    dest: ~/.kube/config
+  when: "'master01' not in inventory_hostname"
+
+- name: get kube config
+  shell: |
+    chown $(id -u):$(id -g) ~/.kube/config
+    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    echo 'alias k=kubectl' >>~/.bashrc
+    echo 'complete -F __start_kubectl k' >>~/.bashrc
+  when: "'master01' not in inventory_hostname"

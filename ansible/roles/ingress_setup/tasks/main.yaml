@@ -1,0 +1,26 @@
+
+helm repo add metallb https://metallb.github.io/metallb
+helm install metallb metallb/metallb
+helm install metallb metallb/metallb --create-namespace --namespace metallb-system -f values.yaml 
+
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm pull ingress-nginx/ingress-nginx
+
+
+cp ingrss.conf
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ingress.key -out ingress.crt -config ingress.conf
+kubectl create secret  tls ingress-tls  -n kube-system  --key="ingress.key" --cert="ingress.crt"
+
+helm install ingress-nginx ingress-nginx-4.0.13.tgz --create-namespace --namespace ingress-nginx  \
+--set controller.extraArgs.default-ssl-certificate=kube-system/ingress-tls \
+--set controller.extraArgs.annotations-prefix=nginx.ingress.kubernetes.io \
+--set defaultBackend.enabled=true \
+--set controller.replicaCount=2 \
+--set controller.name="" \
+--set controller.extraArgs.enable-ssl-passthrough= \
+--set controller.admissionWebhooks.enabled=false
+
+kubectl apply -f tcp-services.yaml -n ingress-nginx
+kubectl apply -f udp-services.yaml -n ingress-nginx

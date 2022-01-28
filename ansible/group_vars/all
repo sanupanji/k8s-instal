@@ -3,7 +3,9 @@ subnet_start: "10.164.227."
 interface: "ens192"
 router_id: 51
 apiserver_vip: "10.164.227.61"
+ingress_external_vip: "10.164.227.62"
 apiserver_dest_port: 6443
 apiserver_src_port: 8443
 pod_network_cidr: "10.244.0.0/16"
 k8s_version: "1.21.1-00"
+cdd_dns_name: "cdd.{{FQDN}}"

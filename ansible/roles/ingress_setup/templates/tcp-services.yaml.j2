@@ -1,0 +1,30 @@
+apiVersion: v1
+data:
+  "22": cdd-app/eric-cm-yang-provider:22
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"ConfigMap","metadata":{"annotations":{},"name":"tcp-services","namespace":"ingress-nginx"}}
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:kubectl.kubernetes.io/last-applied-configuration: {}
+    manager: kubectl-client-side-apply
+    operation: Update
+    time: "2021-10-19T15:20:46Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:data:
+        .: {}
+        f:22: {}
+    manager: kubectl
+    operation: Update
+    time: "2021-10-20T14:04:50Z"
+  name: tcp-services
+  namespace: ingress-nginx

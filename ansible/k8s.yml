@@ -1,41 +1,55 @@
-# - name: host setup
-#   hosts: all
-#   any_errors_fatal: true
-#   gather_facts: no
-#   roles:
-#     - host_setup
+- name: host setup
+  hosts: all
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - host_setup
 
-# - name: pre check
-#   hosts: CLUSTER
-#   any_errors_fatal: true
-#   gather_facts: no
-#   roles:
-#     - pre_check
+- name: pre check
+  hosts: CLUSTER
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - pre_check
 
-# - name: configure keepalived and haproxy
-#   hosts: MASTER
-#   any_errors_fatal: true
-#   gather_facts: no
-#   roles:
-#     - keepalived_haproxy
+- name: configure keepalived and haproxy
+  hosts: MASTER
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - keepalived_haproxy
 
-# - name: setup_cluster
-#   hosts: CLUSTER
-#   any_errors_fatal: true
-#   gather_facts: no
-#   roles:
-#     - setup_cluster
-
-# - name: get kube config to  all servers
-#   hosts: all
-#   any_errors_fatal: true
-#   gather_facts: no
-#   roles:
-#     - kube_config
+- name: setup_cluster
+  hosts: CLUSTER
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - setup_cluster
 
 - name: get kube config to  all servers
+  hosts: all
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - kube_config
+
+- name: ingress setup
   hosts: localhost
   any_errors_fatal: true
   gather_facts: no
   roles:
-    - test
+    - ingress_setup
+
+- name: registry setup
+  hosts: localhost
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - lcm_registry_setup
+
+- name: docker certs
+  hosts: all
+  any_errors_fatal: true
+  gather_facts: no
+  roles:
+    - docker_certs

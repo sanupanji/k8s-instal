@@ -14,7 +14,8 @@
         append=yes
         
 - name: add user to sudo group
-      shell: usermod -aG sudo {{ cdd_user }}
+      shell: |
+        usermod -aG sudo {{ cdd_user }}
       args:
         executable: /bin/bash
 

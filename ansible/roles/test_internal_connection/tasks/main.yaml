@@ -5,11 +5,25 @@
 #     kind: Namespace
 #     state: present
 
+- name: get hashed password
+  shell: |
+    python -c 'import crypt; print crypt.crypt("This is my Password", "{{ cdd_user_pass }}")'
+  register: result
+
+- name: set hashed password
+  set_fact:
+    password: "{{ result.stdout | trim }}"
+
+- name: Adding group {{ cdd_user }} 
+  group:
+    name: "{{ cdd_user }}"
+    state: present
+
 - name: Adding user {{ cdd_user }}  
   user: name={{ cdd_user }}
         group={{ cdd_user }}
         shell=/bin/bash
-        password=${password}
+        password={{password}}
         groups=sudo,docker
         append=yes
         

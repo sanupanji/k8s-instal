@@ -9,3 +9,4 @@ apiserver_src_port: 8443
 pod_network_cidr: "10.244.0.0/16"
 k8s_version: "1.21.1-00"
 cdd_dns_name: "cdd.{{FQDN}}"
+cdd_user: "testuser"

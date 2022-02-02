@@ -29,7 +29,7 @@
         
 - name: add user to sudo group
   shell: |
-    usermod -aG sudo {{ cdd_user }}
+    usermod -aG wheel {{ cdd_user }}
   args:
     executable: /bin/bash
 

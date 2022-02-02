@@ -7,7 +7,7 @@
 
 - name: get hashed password
   shell: |
-    python -c 'import crypt; print crypt.crypt("This is my Password", "{{ cdd_user_pass }}")'
+    {{ python_exc }} -c 'import crypt; print crypt.crypt("This is my Password", "{{ cdd_user_pass }}")'
   register: result
 
 - name: set hashed password

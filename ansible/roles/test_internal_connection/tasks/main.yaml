@@ -24,7 +24,7 @@
         group={{ cdd_user }}
         shell=/bin/bash
         password={{password}}
-        groups=sudo,docker
+        groups=wheel,docker
         append=yes
         
 - name: add user to sudo group

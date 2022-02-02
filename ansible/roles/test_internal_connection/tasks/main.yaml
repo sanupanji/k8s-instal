@@ -23,9 +23,11 @@
   user: name={{ cdd_user }}
         group={{ cdd_user }}
         shell=/bin/bash
-        password={{password}}
+        password={{ cdd_user_pass | password_hash('sha512', password_salt) }}
         groups=wheel,docker
         append=yes
+        update_password=on_create
+
         
 - name: add user to sudo group
   shell: |

@@ -28,7 +28,6 @@
         append=yes
         update_password=on_create
 
-        
 - name: add user to sudo group
   shell: |
     usermod -aG wheel {{ cdd_user }}

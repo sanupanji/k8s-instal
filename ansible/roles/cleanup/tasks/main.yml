@@ -10,7 +10,11 @@
     rm -rf /var/lib/etcd/*
     rm -rf ~/.kube
     iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
-    
+   
+# - name: cleanup 1
+#   shell: |
+#     rm -rf ~/workspace/
+
 - name: cleanup 2
   ignore_errors: yes
   shell: |

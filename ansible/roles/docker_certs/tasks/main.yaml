@@ -6,7 +6,7 @@
 - name: create docker certs directory
   become: yes
   file:
-    path: /etc/docker/certs.d/cdd-registry.{{FQDN}}
+    path: /etc/docker/certs.d/cdd-registry.{{cdd_dns_name}}
     state: directory
     mode: 0775
 
@@ -14,7 +14,7 @@
   become: yes 
   template:
     src: ~/workspace/registry/tls.crt
-    dest: /etc/docker/certs.d/cdd-registry.{{FQDN}}/tls.crt
+    dest: /etc/docker/certs.d/cdd-registry.{{cdd_dns_name}}/tls.crt
 
 - name: restart docker service
   become: yes

@@ -34,7 +34,7 @@
     --set registry.users.secret=cr-registry-credentials \
     --set ingress.enabled=true \
     --set ingress.useHttpProxy=false \
-    --set ingress.hostname="cdd-registry.{{FQDN}}" \
+    --set ingress.hostname="cdd-registry.{{cdd_dns_name}}" \
     --set ingress.tls.enabled=true \
     --set ingress.tls.secretName="cr-registry-tls" \
     --set ingress.ingressClass="nginx" \

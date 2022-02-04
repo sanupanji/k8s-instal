@@ -1,3 +1,7 @@
+- name: clean docker cert
+  become: yes
+  shell: |
+    rm -rf /etc/docker/certs.d
 
 - name: create docker certs directory
   become: yes

@@ -4,13 +4,18 @@ director02 ansible_host={{subnet_start}}144 ansible_user=root ansible_password=r
 
 master01 ansible_host={{subnet_start}}145 ansible_user=root ansible_password=root123
 
-worker01 ansible_host={{subnet_start}}146 ansible_user=root ansible_password=root123
+master02 ansible_host={{subnet_start}}146 ansible_user=root ansible_password=root123
 
-worker02 ansible_host={{subnet_start}}147 ansible_user=root ansible_password=root123
+master03 ansible_host={{subnet_start}}147 ansible_user=root ansible_password=root123
 
-worker03 ansible_host={{subnet_start}}149 ansible_user=root ansible_password=root123
+worker01 ansible_host={{subnet_start}}148 ansible_user=root ansible_password=root123
 
-worker04 ansible_host={{subnet_start}}150 ansible_user=root ansible_password=root123
+worker02 ansible_host={{subnet_start}}149 ansible_user=root ansible_password=root123
+
+worker03 ansible_host={{subnet_start}}150 ansible_user=root ansible_password=root123
+
+worker04 ansible_host={{subnet_start}}151 ansible_user=root ansible_password=root123
+
 
 [DIRECTOR]
 director01
@@ -18,6 +23,8 @@ director02
 
 [MASTER]
 master01
+master02
+master03
 
 [WORKER]
 worker01

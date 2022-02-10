@@ -28,6 +28,3 @@ worker04
 [CLUSTER:children]
 MASTER
 WORKER
-
-[BACKUP]
-master03

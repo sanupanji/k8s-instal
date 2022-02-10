@@ -19,44 +19,44 @@
 #   roles:
 #     - keepalived_haproxy
 
-- name: setup_cluster
-  hosts: CLUSTER
-  any_errors_fatal: true
-  gather_facts: no
-  roles:
-    - setup_cluster
-
-- name: get kube config to  all servers
-  hosts: all
-  any_errors_fatal: true
-  gather_facts: no
-  roles:
-    - kube_config
-
-- name: ingress setup
-  hosts: localhost
-  any_errors_fatal: true
-  gather_facts: no
-  roles:
-    - ingress_setup
-
-- name: registry setup
-  hosts: localhost
-  any_errors_fatal: true
-  gather_facts: no
-  roles:
-    - lcm_registry_setup
-
-- name: docker certs
-  hosts: all
-  any_errors_fatal: true
-  gather_facts: no
-  roles:
-    - docker_certs
-
-# - name: create cdd user
-#   hosts: director02
+# - name: setup_cluster
+#   hosts: CLUSTER
 #   any_errors_fatal: true
 #   gather_facts: no
 #   roles:
-#     - test_internal_connection
+#     - setup_cluster
+
+# - name: get kube config to  all servers
+#   hosts: all
+#   any_errors_fatal: true
+#   gather_facts: no
+#   roles:
+#     - kube_config
+
+# - name: ingress setup
+#   hosts: localhost
+#   any_errors_fatal: true
+#   gather_facts: no
+#   roles:
+#     - ingress_setup
+
+# - name: registry setup
+#   hosts: localhost
+#   any_errors_fatal: true
+#   gather_facts: no
+#   roles:
+#     - lcm_registry_setup
+
+# - name: docker certs
+#   hosts: all
+#   any_errors_fatal: true
+#   gather_facts: no
+#   roles:
+#     - docker_certs
+
+# # - name: create cdd user
+# #   hosts: director02
+# #   any_errors_fatal: true
+# #   gather_facts: no
+# #   roles:
+# #     - test_internal_connection

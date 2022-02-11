@@ -3,6 +3,7 @@
     path: ~/workspace/metallb
     state: directory
     mode: 0775
+    recurse: yes
 
 - name: copy metallb values.yaml
   template:

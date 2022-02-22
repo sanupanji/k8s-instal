@@ -31,7 +31,7 @@
 - name: create ingress cert and key
   shell: |
     cd ~/workspace/ingress
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ingress.key -out ingress.crt -config ingress.conf
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ingress.key -out ingress.crt -config ingress.conf -addext "subjectAltName = DNS:cdd.{{FQDN}},DNS:*.cdd.{{FQDN}}"
     kubectl create secret  tls ingress-tls  -n kube-system  --key="ingress.key" --cert="ingress.crt"
 
 - name: install ingress

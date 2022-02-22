@@ -25,7 +25,7 @@
     cd ~/workspace/registry
     htpasswd -cBb htpasswd admin ericsson123
     kubectl create secret generic  cr-registry-credentials --from-file=htpasswd=./htpasswd -n kube-system
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -config registry.conf
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -config registry.conf -addext "subjectAltName = DNS:cdd-registry.cdd.{{FQDN}}"
     kubectl create secret  tls cr-registry-tls  -n kube-system  --key="tls.key" --cert="tls.crt"
 
 - name: install registry
@@ -43,3 +43,11 @@
     --set ingress.tls.secretName="cr-registry-tls" \
     --set ingress.ingressClass="nginx" \
     --set persistence.persistentVolumeClaim.size=300Gi
+
+
+- name: install metrics server
+  shell: |
+    cd ~/workspace/registry
+    helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+    helm repo update
+    helm upgrade --install metrics-server metrics-server/metrics-server -n kube-system --set 'args={--kubelet-insecure-tls}'
